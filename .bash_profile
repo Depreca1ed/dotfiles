@@ -7,3 +7,5 @@
 if uwsm check may-start && uwsm select; then
 	exec uwsm start default
 fi
+
+export PATH=$PATH:/home/dep/.spicetify
