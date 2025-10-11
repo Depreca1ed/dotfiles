@@ -113,6 +113,7 @@ class PlayerManager:
         if current_player is not None:
             self.on_metadata_changed(current_player, current_player.props.metadata)
         else:
+            os.system("swww img ~/Pictures/Wallpaper.png")
             self.clear_output()
 
     def on_metadata_changed(self, player, metadata, _=None):
@@ -124,6 +125,12 @@ class PlayerManager:
         title = player.get_title()
         title = title.replace("&", "&amp;")
 
+        if player_name == "spotify" and "mpris:trackid" in metadata.keys():
+            print(metadata.keys())
+            os.system(f"curl -o ~/Pictures/Spotify.jpg {metadata['mpris:artUrl']}")
+            os.system("convert ~/Pictures/Spotify.jpg -blur 0x5 ~/Pictures/Spotify.jpg")
+            os.system("swww img ~/Pictures/Spotify.jpg")
+
         track_info = ""
         if (
             player_name == "spotify"
@@ -131,6 +138,8 @@ class PlayerManager:
             and ":ad:" in player.props.metadata["mpris:trackid"]
         ):
             track_info = "Advertisement"
+            os.system("swww img ~/Pictures/Wallpaper.png")
+
         elif artist is not None and title is not None:
             track_info = f"{title}"
         else:
@@ -147,6 +156,11 @@ class PlayerManager:
             logger.debug(
                 f"Other player {current_playing.props.player_name} is playing, skipping"
             )
+        if (
+            current_playing.props.player_name != "spotify"
+            or current_playing.props.status != "Playing"
+        ):
+            os.system("swww img ~/Pictures/Wallpaper.png")
 
     def on_player_appeared(self, _, player):
         logger.info(f"Player has appeared: {player.name}")
@@ -166,6 +180,8 @@ class PlayerManager:
 
     def on_player_vanished(self, _, player):
         logger.info(f"Player {player.props.player_name} has vanished")
+        os.system("swww img ~/Pictures/Wallpaper.png")
+
         self.show_most_important_player()
 
 
